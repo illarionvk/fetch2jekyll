@@ -27,7 +27,7 @@ function selectPages(window) {
   console.log( 'All Articles Count: '+$(config.linkSelectorString).length );
   console.log( 'Selected Articles Count: '+selectedLinks.length );
 
-  //fetchPage(selectedLinks, iterator);
+  fetchPage(selectedLinks, iterator);
 }
 
 function fetchPage(selectedLinks, iterator) {
@@ -35,7 +35,7 @@ function fetchPage(selectedLinks, iterator) {
   if ( iterator < selectedLinks.length ) {
     jsdom.env( selectedLinks[iterator], ["http://code.jquery.com/jquery.js"], function (errors, window) {
       if (!errors) {
-        console.log('Fetch page: '+iterator);
+        console.log('Fetched page: '+iterator);
         parsePage(window, selectedLinks, iterator);
       } else {
         console.log('Error!');
@@ -48,25 +48,21 @@ function fetchPage(selectedLinks, iterator) {
 
 function parsePage(window, selectedLinks, iterator) {
   var $ = window.$;
-  var page;
+  var page = {};
+  var i = 0;
 
-  page = '';
-  page = {};
+  if ( isEmpty(config.removeElements) === false ) {
+    for ( i = 0; i < config.removeElements.length; i += 1) {
+      $(config.removeElements[i]).remove();
+    }
+  }
 
-  $('p.leading').each(function() {
-    $( this ).replaceWith( "<h2>" + $( this ).text() + "</h2>" );
-  });
+  page.author = $(config.selectors.author).text();
+  page.title = $(config.selectors.title).text();
 
-  page.title = $('#blogpage h1').text();
-  page.author = $('#blogpage .articleauthor a').text();
+  page.body = $(config.selectors.body).html();
 
-  $('#blogpage .articleauthor').remove();
-  $('#blogpage h1').remove();
-  $('#blogpage br').remove();
-
-  page.body = $('#blogpage').html();
-
-  console.info( 'Parse page: '+iterator );
+  console.info( 'Parsed page' );
 
   htmlToMarkdown(page, selectedLinks, iterator);
 }
@@ -89,7 +85,7 @@ function htmlToMarkdown(page, selectedLinks, iterator) {
 
 function writeJekyllPost(page, selectedLinks, iterator) {
   var path = '';
-  var date = '2014-04-01';
+  var date = config.jekyll.date;
   var fileName;
 
   var metadata;
@@ -107,7 +103,7 @@ function writeJekyllPost(page, selectedLinks, iterator) {
   delete page.bodyInMarkdown;
   delete page.body;
 
-  metadata = YAML.stringify(page).replace(/^---/, "---\n\n  layout: post-new-feature");
+  metadata = YAML.stringify(page).replace(/^---/, "---\n\n  layout: "+config.jekyll.postType);
   metadata = metadata + "\n---\n\n";
   output = metadata + body + "\n";
 
@@ -132,7 +128,7 @@ function writeJekyllPost(page, selectedLinks, iterator) {
 
 jsdom.env( config.initialPage, ["http://code.jquery.com/jquery.js"], function (errors, window) {
   if (!errors) {
-    console.log(config.initialPage);
+    console.log("Fetched "+config.initialPage);
     selectPages(window);
   } else {
     console.log('Error!');

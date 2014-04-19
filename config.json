@@ -1,6 +1,18 @@
 {
+  "outputFolder": "./output/",
   "initialPage": "http://dailyjs.com",
   "linkSelectorString": "h2.post a",
   "filterUrlsBy": "",
-  "outputFolder": "./output/"
+  "removeElements": [
+    "#content .meta .tags img"
+  ],
+  "selectors": {
+    "author": "#content .meta .author",
+    "title": "#content h2.post",
+    "body": "#post"
+  },
+  "jekyll": {
+    "postType": "post",
+    "date": "2014-04-01"
+  }
 }
