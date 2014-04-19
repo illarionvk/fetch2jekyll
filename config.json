@@ -1,0 +1,6 @@
+{
+  "initialPage": "http://dailyjs.com",
+  "linkSelectorString": "h2.post a",
+  "filterUrlsBy": "",
+  "outputFolder": "./output/"
+}
