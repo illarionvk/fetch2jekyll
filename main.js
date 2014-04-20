@@ -1,3 +1,6 @@
+(function() {
+"use strict";
+
 var fs = require("fs");
 var pdc = require("pdc");
 var jsdom = require('jsdom');
@@ -51,10 +54,14 @@ function parsePage(window, selectedLinks, iterator) {
   var page = {};
   var i = 0;
 
-  if ( isEmpty(config.removeElements) === false ) {
+  if ( Array.isArray(config.removeElements) ) {
     for ( i = 0; i < config.removeElements.length; i += 1) {
       $(config.removeElements[i]).remove();
     }
+  } else if ( typeof config.removeElements === "string" ) {
+    $(config.removeElements).remove();
+  } else {
+    console.error('Error! Please check your "removeElements" setting');
   }
 
   page.author = $(config.selectors.author).text();
@@ -103,7 +110,7 @@ function writeJekyllPost(page, selectedLinks, iterator) {
   delete page.bodyInMarkdown;
   delete page.body;
 
-  metadata = YAML.stringify(page).replace(/^---/, "---\n\n  layout: "+config.jekyll.postType);
+  metadata = YAML.stringify(page).replace(/^---/, "---\n\n  layout: "+config.jekyll.layout);
   metadata = metadata + "\n---\n\n";
   output = metadata + body + "\n";
 
@@ -134,3 +141,5 @@ jsdom.env( config.initialPage, ["http://code.jquery.com/jquery.js"], function (e
     console.log('Error!');
   }
 });
+
+})();
