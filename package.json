@@ -7,6 +7,7 @@
     "gulp-jsonlint": "0.0.3",
     "jsdom": "^0.10.5",
     "pdc": "^0.1.2",
-    "json2yaml": "^1.0.3"
+    "json2yaml": "^1.0.3",
+    "moment": "^2.6.0"
   }
 }

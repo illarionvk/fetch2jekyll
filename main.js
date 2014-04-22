@@ -5,6 +5,7 @@ var fs = require("fs");
 var pdc = require("pdc");
 var jsdom = require('jsdom');
 var YAML = require('json2yaml');
+var moment = require('moment');
 
 var config = JSON.parse( fs.readFileSync('./config.json', { encoding: 'utf8' }) );
 
@@ -92,12 +93,18 @@ function htmlToMarkdown(page, selectedLinks, iterator) {
 
 function writeJekyllPost(page, selectedLinks, iterator) {
   var path = '';
-  var date = config.jekyll.date;
-  var fileName;
+  var date = ''; 
+  var fileName = '';
 
   var metadata;
   var body;
   var output;
+
+  if ( /^\d{4}-\d{2}-\d{2}$/.test(config.jekyll.date) === true ) {
+    date = config.jekyll.date;
+  } else {
+    date = moment().format("YYYY-MM-DD");
+  }
 
   // Add trailing slash to path variable
   if ( /\/$/.test(config.outputFolder) ) {
