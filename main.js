@@ -43,6 +43,12 @@ function fetchPage(selectedLinks, iterator) {
         parsePage(window, selectedLinks, iterator);
       } else {
         console.log('Error!');
+        console.log(errors);
+        console.log('Exception:');
+        console.log(errors[0].data.exception);
+        //console.log('Node:');
+        //console.log(errors[0].data.node);
+        console.log('Link: '+selectedLinks[iterator]);
       }
     });
   } else {
