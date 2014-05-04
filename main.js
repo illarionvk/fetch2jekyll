@@ -106,6 +106,8 @@ function writeJekyllPost(page, selectedLinks, iterator) {
   var body;
   var output;
 
+  var nextIterator;
+
   if ( /^\d{4}-\d{2}-\d{2}$/.test(config.jekyll.date) === true ) {
     date = config.jekyll.date;
   } else {
@@ -142,8 +144,8 @@ function writeJekyllPost(page, selectedLinks, iterator) {
 
   fs.writeFileSync(path+fileName, output, { encoding: 'utf-8' });
 
-  iterator += 1;
-  fetchPage(selectedLinks, iterator);
+  nextIterator = iterator + 1;
+  fetchPage(selectedLinks, nextIterator);
 }
 
 jsdom.env( config.initialPage, ["http://code.jquery.com/jquery.js"], function (errors, window) {
